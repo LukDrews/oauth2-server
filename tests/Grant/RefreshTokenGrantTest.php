@@ -54,6 +54,7 @@ class RefreshTokenGrantTest extends TestCase
         $scopeEntity->setIdentifier('foo');
         $scopeRepositoryMock = $this->getMockBuilder(ScopeRepositoryInterface::class)->getMock();
         $scopeRepositoryMock->method('getScopeEntityByIdentifier')->willReturn($scopeEntity);
+        $scopeRepositoryMock->method('finalizeScopes')->willReturn([$scopeEntity]);
 
         $accessTokenRepositoryMock = $this->getMockBuilder(AccessTokenRepositoryInterface::class)->getMock();
         $accessTokenRepositoryMock->method('getNewToken')->willReturn(new AccessTokenEntity());
@@ -112,6 +113,7 @@ class RefreshTokenGrantTest extends TestCase
 
         $scopeRepositoryMock = $this->getMockBuilder(ScopeRepositoryInterface::class)->getMock();
         $scopeRepositoryMock->method('getScopeEntityByIdentifier')->willReturn($scopeEntity);
+        $scopeRepositoryMock->method('finalizeScopes')->willReturn([$scopeEntity]);
 
         $accessTokenRepositoryMock = $this->getMockBuilder(AccessTokenRepositoryInterface::class)->getMock();
         $accessTokenRepositoryMock->method('getNewToken')->willReturn(new AccessTokenEntity());
@@ -176,6 +178,7 @@ class RefreshTokenGrantTest extends TestCase
         $scope->setIdentifier('foo');
         $scopeRepositoryMock = $this->getMockBuilder(ScopeRepositoryInterface::class)->getMock();
         $scopeRepositoryMock->method('getScopeEntityByIdentifier')->willReturn($scope);
+        $scopeRepositoryMock->method('finalizeScopes')->willReturn([$scope]);
 
         $grant = new RefreshTokenGrant($refreshTokenRepositoryMock);
         $grant->setClientRepository($clientRepositoryMock);
@@ -471,6 +474,7 @@ class RefreshTokenGrantTest extends TestCase
         $grant->respondToAccessTokenRequest($serverRequest, $responseType, new DateInterval('PT5M'));
     }
 
+
     public function testRevokedRefreshToken()
     {
         $refreshTokenId = 'foo';
@@ -560,7 +564,7 @@ class RefreshTokenGrantTest extends TestCase
                     'client_id'        => 'foo',
                     'refresh_token_id' => $refreshTokenId,
                     'access_token_id'  => 'abcdef',
-                    'scopes'           => ['foo'],
+
                     'user_id'          => 123,
                     'expire_time'      => \time() + 3600,
                 ]
@@ -568,6 +572,16 @@ class RefreshTokenGrantTest extends TestCase
         );
 
         $serverRequest = (new ServerRequest())->withParsedBody([
+
+           'client_id'     => 'foo',
+           'client_secret' => 'bar',
+           'refresh_token' => $oldRefreshToken,
+           'scope'         =>  ['foo', 'bar'],
+       ]);
+
+        $responseType = new StubResponseType();
+
+
             'client_id'     => 'foo',
             'client_secret' => 'bar',
             'refresh_token' => $oldRefreshToken,
@@ -583,5 +597,6 @@ class RefreshTokenGrantTest extends TestCase
         $grant->respondToAccessTokenRequest($serverRequest, new StubResponseType(), new DateInterval('PT5M'));
 
         Assert::assertFalse($refreshTokenRepositoryMock->isRefreshTokenRevoked($refreshTokenId));
+
     }
 }

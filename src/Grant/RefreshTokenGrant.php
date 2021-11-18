@@ -63,6 +63,8 @@ class RefreshTokenGrant extends AbstractGrant
             }
         }
 
+        $scopes = $this->scopeRepository->finalizeScopes($scopes, $this->getIdentifier(), $client);
+
         // Expire old tokens
         $this->accessTokenRepository->revokeAccessToken($oldRefreshToken['access_token_id']);
         if ($this->revokeRefreshTokens) {

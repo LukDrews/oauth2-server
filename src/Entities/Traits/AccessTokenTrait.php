@@ -15,14 +15,14 @@ use Lcobucci\JWT\Signer\Key\InMemory;
 use Lcobucci\JWT\Signer\Key\LocalFileReference;
 use Lcobucci\JWT\Signer\Rsa\Sha256;
 use Lcobucci\JWT\Token;
-use League\OAuth2\Server\CryptKey;
+use League\OAuth2\Server\CryptKeyInterface;
 use League\OAuth2\Server\Entities\ClientEntityInterface;
 use League\OAuth2\Server\Entities\ScopeEntityInterface;
 
 trait AccessTokenTrait
 {
     /**
-     * @var CryptKey
+     * @var CryptKeyInterface
      */
     private $privateKey;
 
@@ -34,7 +34,7 @@ trait AccessTokenTrait
     /**
      * Set the private key used to encrypt this access token.
      */
-    public function setPrivateKey(CryptKey $privateKey)
+    public function setPrivateKey(CryptKeyInterface $privateKey)
     {
         $this->privateKey = $privateKey;
     }

@@ -14,7 +14,7 @@ namespace League\OAuth2\Server;
 use LogicException;
 use RuntimeException;
 
-class CryptKey
+class CryptKey implements CryptKeyInterface
 {
     /** @deprecated left for backward compatibility check */
     const RSA_KEY_PATTERN =
@@ -133,9 +133,7 @@ class CryptKey
     }
 
     /**
-     * Retrieve key path.
-     *
-     * @return string
+     * {@inheritdoc}
      */
     public function getKeyPath()
     {
@@ -143,9 +141,7 @@ class CryptKey
     }
 
     /**
-     * Retrieve key pass phrase.
-     *
-     * @return null|string
+     * {@inheritdoc}
      */
     public function getPassPhrase()
     {

@@ -6,6 +6,18 @@ and this project adheres to [Semantic Versioning](http://semver.org/spec/v2.0.0.
 
 ## [Unreleased]
 
+### Added (v9)
+- A CryptKeyInterface to allow developers to change the CryptKey implementation with greater ease (PR #1044)
+- The authorization server can now finalize scopes when a client uses a refresh token (PR #1094)
+- An AuthorizationRequestInterface to make it easier to extend the AuthorizationRequest (PR #1110)
+
+### Fixed (v9)
+- If a refresh token has expired, been revoked, cannot be decrypted, or does not belong to the correct client, the server will now issue an `invalid_grant` error and a HTTP 400 response. In previous versions the server incorrectly issued an `invalid_request` and HTTP 401 response (PR #1042) (PR #1082)
+
+### Changed (v9)
+- Authorization Request objects are now created through the factory method, `createAuthorizationRequest()` (PR #1111)
+- Changed parameters for `finalizeScopes()` to allow a reference to an auth code ID (PR #1112)
+
 ## [8.3.1] - released 2021-06-04
 ### Fixed
 - Revert check on clientID. We will no longer require this to be a string (PR #1233)
@@ -57,7 +69,6 @@ and this project adheres to [Semantic Versioning](http://semver.org/spec/v2.0.0.
 ### Fixed
 - If you provide a valid redirect_uri with the auth code grant and an invalid scope, the server will use the given 
 redirect_uri instead of the default client redirect uri (PR #1126)
-
 
 ## [8.1.0] - released 2020-04-29
 

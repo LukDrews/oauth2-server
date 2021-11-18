@@ -18,7 +18,7 @@ use Lcobucci\JWT\Signer\Rsa\Sha256;
 use Lcobucci\JWT\Validation\Constraint\SignedWith;
 use Lcobucci\JWT\Validation\Constraint\ValidAt;
 use Lcobucci\JWT\Validation\RequiredConstraintsViolated;
-use League\OAuth2\Server\CryptKey;
+use League\OAuth2\Server\CryptKeyInterface;
 use League\OAuth2\Server\CryptTrait;
 use League\OAuth2\Server\Exception\OAuthServerException;
 use League\OAuth2\Server\Repositories\AccessTokenRepositoryInterface;
@@ -34,7 +34,7 @@ class BearerTokenValidator implements AuthorizationValidatorInterface
     private $accessTokenRepository;
 
     /**
-     * @var CryptKey
+     * @var CryptKeyInterface
      */
     protected $publicKey;
 
@@ -54,9 +54,9 @@ class BearerTokenValidator implements AuthorizationValidatorInterface
     /**
      * Set the public key
      *
-     * @param CryptKey $key
+     * @param CryptKeyInterface $key
      */
-    public function setPublicKey(CryptKey $key)
+    public function setPublicKey(CryptKeyInterface $key)
     {
         $this->publicKey = $key;
 

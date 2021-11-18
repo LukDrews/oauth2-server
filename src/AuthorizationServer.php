@@ -18,7 +18,7 @@ use League\OAuth2\Server\Grant\GrantTypeInterface;
 use League\OAuth2\Server\Repositories\AccessTokenRepositoryInterface;
 use League\OAuth2\Server\Repositories\ClientRepositoryInterface;
 use League\OAuth2\Server\Repositories\ScopeRepositoryInterface;
-use League\OAuth2\Server\RequestTypes\AuthorizationRequest;
+use League\OAuth2\Server\RequestTypes\AuthorizationRequestInterface;
 use League\OAuth2\Server\ResponseTypes\AbstractResponseType;
 use League\OAuth2\Server\ResponseTypes\BearerTokenResponse;
 use League\OAuth2\Server\ResponseTypes\ResponseTypeInterface;
@@ -40,12 +40,12 @@ class AuthorizationServer implements EmitterAwareInterface
     protected $grantTypeAccessTokenTTL = [];
 
     /**
-     * @var CryptKey
+     * @var CryptKeyInterface
      */
     protected $privateKey;
 
     /**
-     * @var CryptKey
+     * @var CryptKeyInterface
      */
     protected $publicKey;
 
@@ -90,7 +90,7 @@ class AuthorizationServer implements EmitterAwareInterface
      * @param ClientRepositoryInterface      $clientRepository
      * @param AccessTokenRepositoryInterface $accessTokenRepository
      * @param ScopeRepositoryInterface       $scopeRepository
-     * @param CryptKey|string                $privateKey
+     * @param CryptKeyInterface|string       $privateKey
      * @param string|Key                     $encryptionKey
      * @param null|ResponseTypeInterface     $responseType
      */
@@ -106,7 +106,7 @@ class AuthorizationServer implements EmitterAwareInterface
         $this->accessTokenRepository = $accessTokenRepository;
         $this->scopeRepository = $scopeRepository;
 
-        if ($privateKey instanceof CryptKey === false) {
+        if ($privateKey instanceof CryptKeyInterface === false) {
             $privateKey = new CryptKey($privateKey);
         }
 
@@ -154,7 +154,7 @@ class AuthorizationServer implements EmitterAwareInterface
      *
      * @throws OAuthServerException
      *
-     * @return AuthorizationRequest
+     * @return AuthorizationRequestInterface
      */
     public function validateAuthorizationRequest(ServerRequestInterface $request)
     {
@@ -170,13 +170,15 @@ class AuthorizationServer implements EmitterAwareInterface
     /**
      * Complete an authorization request
      *
-     * @param AuthorizationRequest $authRequest
-     * @param ResponseInterface    $response
+     * @param AuthorizationRequestInterface $authRequest
+     * @param ResponseInterface             $response
      *
      * @return ResponseInterface
      */
-    public function completeAuthorizationRequest(AuthorizationRequest $authRequest, ResponseInterface $response)
-    {
+    public function completeAuthorizationRequest(
+        AuthorizationRequestInterface $authRequest,
+        ResponseInterface $response
+    ) {
         return $this->enabledGrantTypes[$authRequest->getGrantTypeId()]
             ->completeAuthorizationRequest($authRequest)
             ->generateHttpResponse($response);
