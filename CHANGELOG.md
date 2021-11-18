@@ -5,6 +5,7 @@ The format is based on [Keep a Changelog](http://keepachangelog.com/en/1.0.0/)
 and this project adheres to [Semantic Versioning](http://semver.org/spec/v2.0.0.html).
 
 ## [Unreleased]
+
 ### Added (v9)
 - A CryptKeyInterface to allow developers to change the CryptKey implementation with greater ease (PR #1044)
 - The authorization server can now finalize scopes when a client uses a refresh token (PR #1094)
@@ -17,6 +18,27 @@ and this project adheres to [Semantic Versioning](http://semver.org/spec/v2.0.0.
 - Authorization Request objects are now created through the factory method, `createAuthorizationRequest()` (PR #1111)
 - Changed parameters for `finalizeScopes()` to allow a reference to an auth code ID (PR #1112)
 
+## [8.3.1] - released 2021-06-04
+### Fixed
+- Revert check on clientID. We will no longer require this to be a string (PR #1233)
+
+## [8.3.0] - released 2021-06-03
+### Added
+- The server will now validate redirect uris according to rfc8252 (PR #1203)
+- Events emitted now include the refresh token and access token payloads (PR #1211)
+- Use the `revokeRefreshTokens()` function to decide whether refresh tokens are revoked or not upon use (PR #1189)
+
+### Changed
+- Keys are now validated using `openssl_pkey_get_private()` and openssl_pkey_get_public()` instead of regex matching (PR #1215)
+
+### Fixed
+- The server will now only recognise and handle an authorization header if the value of the header is non-empty. This is to circumvent issues where some common frameworks set this header even if no value is present (PR #1170)
+- Added type validation for redirect uri, client ID, client secret, scopes, auth code, state, username, and password inputs (PR #1210)
+- Allow scope "0" to be used. Previously this was removed from a request because it failed an `empty()` check (PR #1181)
+
+## [8.2.4] - released 2020-12-10
+### Fixed
+- Reverted the enforcement of at least one redirect_uri for a client. This change has instead been moved to version 9 (PR #1169)
 
 ## [8.2.3] - released 2020-12-02
 ### Added
@@ -534,7 +556,10 @@ Version 5 is a complete code rewrite.
 
 - First major release
 
-[Unreleased]: https://github.com/thephpleague/oauth2-server/compare/8.2.3...HEAD
+[Unreleased]: https://github.com/thephpleague/oauth2-server/compare/8.3.1...HEAD
+[8.3.1]: https://github.com/thephpleague/oauth2-server/compare/8.3.0...8.3.1
+[8.3.0]: https://github.com/thephpleague/oauth2-server/compare/8.2.4...8.3.0
+[8.2.4]: https://github.com/thephpleague/oauth2-server/compare/8.2.3...8.2.4
 [8.2.3]: https://github.com/thephpleague/oauth2-server/compare/8.2.2...8.2.3
 [8.2.2]: https://github.com/thephpleague/oauth2-server/compare/8.2.1...8.2.2
 [8.2.1]: https://github.com/thephpleague/oauth2-server/compare/8.2.0...8.2.1
